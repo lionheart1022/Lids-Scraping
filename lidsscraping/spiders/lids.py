@@ -29,6 +29,7 @@ class LidsSpider(scrapy.Spider):
         page_count = response.xpath('//ul[@class="pagination"]'
                                     '/li[contains(@class, "last-page")]/a/text()').extract()
         if page_count:
+            page_count = page_count[0]
             for i in range(1, int(page_count) + 1):
                 pagination_link = response.url + '?page=' + str(i)
                 yield scrapy.Request(pagination_link, callback=self.parse_links, headers=self.header)
