@@ -27,10 +27,11 @@ class LidsSpider(scrapy.Spider):
 
     def parse_pagination(self, response):
         page_count = response.xpath('//ul[@class="pagination"]'
-                                    '/li[contains(@class, "last-page")]/a/text()')[0].extract()
-        for i in range(1, int(page_count) + 1):
-            pagination_link = response.url + '?page=' + str(i)
-            yield scrapy.Request(pagination_link, callback=self.parse_links, headers=self.header)
+                                    '/li[contains(@class, "last-page")]/a/text()').extract()
+        if page_count:
+            for i in range(1, int(page_count) + 1):
+                pagination_link = response.url + '?page=' + str(i)
+                yield scrapy.Request(pagination_link, callback=self.parse_links, headers=self.header)
 
     def parse_links(self, response):
         links = response.xpath('//ul[contains(@class, "product-listing")]'
